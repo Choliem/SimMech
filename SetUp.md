@@ -140,23 +140,3 @@ git push origin fitur-login-screen
 | **Programmer 1 (Lead)** | **Auth & Admin** | • Login Logic & Role Check<br>• Admin Dashboard (Verify Seller)<br>• Report System |
 | **Programmer 2** | **Core & Edukasi** | • Home & Garage Dropdown<br>• Video Player & Disclaimer<br>• Search Engine (Title + Desc) |
 | **Programmer 3** | **Shop & Interaksi** | • UI Katalog Produk<br>• Logic Tombol (Shopee vs WA)<br>• Form Upload Barang Bekas |
-
----
-
-## 🛠️ Troubleshooting
-
-### Error: `SDK location not found`
-Ini terjadi karena file `local.properties` hilang (karena di-ignore git).
-**Solusi:** Lihat langkah **No. 3** di bagian Instalasi di atas.
-
-### Error: Device tidak muncul (Xiaomi/POCO)
-Xiaomi membutuhkan izin keamanan tambahan.
-**Solusi:**
-1. Pastikan Driver USB sudah terinstall (Gunakan Universal ADB Driver).
-2. Di HP, ubah mode USB dari "File Transfer" ke **"PTP" (Picture Transfer)**.
-3. Di *Developer Options*, aktifkan:
-   - USB Debugging
-   - Install via USB
-   - USB Debugging (Security Settings)
-
----
