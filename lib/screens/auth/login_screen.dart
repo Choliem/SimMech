@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../core/app_theme.dart'; // Panggil warna tema kita
+import '../../core/app_theme.dart'; // Panggil warna tema
+import '../../services/auth_service.dart'; // Panggil logika Auth
+import '../main_navigation.dart';
+import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,10 +19,18 @@ class _LoginScreenState extends State<LoginScreen> {
   // Variable untuk menyembunyikan/melihatkan password
   bool _isObscure = true;
 
+  // (Opsional) Membersihkan memori saat halaman ditutup
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Background diambil dari tema (Hitam/Dark Gray)
+      // Background diambil otomatis dari tema (Hitam/Dark Gray)
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
@@ -27,7 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // 1. LOGO / ICON (Sementara pakai Icon Obeng)
+              // 1. LOGO / ICON
               const Icon(
                 Icons.build_circle_outlined,
                 size: 100,
@@ -56,6 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
               TextField(
                 controller: _emailController,
                 style: const TextStyle(color: Colors.white),
+                keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   labelText: "Email",
                   prefixIcon: const Icon(Icons.email_outlined),
@@ -91,11 +103,62 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 24),
 
-              // 5. TOMBOL LOGIN
+              // 5. TOMBOL LOGIN (YANG SUDAH DIUPDATE)
               ElevatedButton(
-                onPressed: () {
-                  // Nanti kita isi logika login Firebase disini
-                  print("Login ditekan: ${_emailController.text}");
+                onPressed: () async {
+                  // A. Ambil teks dari inputan & Hapus spasi
+                  String email = _emailController.text.trim();
+                  String password = _passwordController.text.trim();
+
+                  // B. Cek apakah kosong
+                  if (email.isEmpty || password.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Email dan Password harus diisi!"),
+                      ),
+                    );
+                    return;
+                  }
+
+                  // C. Panggil Service Login
+                  // (Bisa tambahkan loading indicator disini nanti)
+                  String? result = await AuthService().login(
+                    email: email,
+                    password: password,
+                  );
+
+                  // D. Cek Hasil Login
+                  if (result == null) {
+                    // SUKSES (Result null artinya tidak ada error)
+                    if (!mounted) return; // Cek apakah layar masih aktif
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Login BERHASIL! Selamat Datang."),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                    // Nanti disini kita pindah ke Home Screen:
+                    // Navigator.pushReplacement(context, MaterialPageRoute(...));
+
+                    // Pindah ke MainNavigation dan hapus Login dari sejarah (biar gak bisa di-back)
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MainNavigation(),
+                      ),
+                    );
+                  } else {
+                    // GAGAL (Result berisi pesan error)
+                    if (!mounted) return;
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Gagal: $result"),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
@@ -108,10 +171,16 @@ class _LoginScreenState extends State<LoginScreen> {
 
               const SizedBox(height: 16),
 
-              // 6. TOMBOL DAFTAR
+              // 6. TOMBOL DAFTAR (Placeholder)
               TextButton(
                 onPressed: () {
-                  // Nanti arahkan ke Register Screen
+                  // PINDAH KE REGISTER SCREEN
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const RegisterScreen(),
+                    ),
+                  );
                 },
                 child: const Text("Belum punya akun? Daftar Sekarang"),
               ),
