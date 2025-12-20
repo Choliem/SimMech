@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1076931167106",
+    "project_id": "simmech-d245a",
+    "storage_bucket": "simmech-d245a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1076931167106:android:f976cc6d4fc8d86dd6059b",
+        "android_client_info": {
+          "package_name": "com.example.simmech_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyConVC062Ct5jBIKRR0cRPA5D0AlbrEbYk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
